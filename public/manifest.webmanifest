@@ -1,0 +1,10 @@
+{
+  "name": "Alerta de Ponto",
+  "short_name": "Alerta de Ponto",
+  "description": "Lembretes de horários de trabalho",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7f8",
+  "theme_color": "#0f766e",
+  "icons": []
+}
