@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp - Gerador de Links</title>
+    <title>WhatsApp - Links Rápidos</title>
     <style>
         * {
             margin: 0;
@@ -84,6 +83,56 @@
             border-color: #25d366;
         }
         
+        /* ===== Seletor NIO / TIM ===== */
+        .operator-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .operator-option {
+            flex: 1;
+            position: relative;
+        }
+        
+        .operator-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .operator-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.2s;
+            background-color: white;
+        }
+        
+        .operator-option input[type="radio"]:checked + .operator-label {
+            border-color: #25d366;
+            background-color: rgba(37, 211, 102, 0.1);
+            color: #128c7e;
+        }
+        
+        .operator-label:hover {
+            border-color: #25d366;
+        }
+        
+        .operator-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        /* ===== Botões ===== */
         .button-group {
             display: flex;
             flex-direction: column;
@@ -111,16 +160,6 @@
             background-color: #128c7e;
         }
         
-        .secondary-btn {
-            background-color: transparent;
-            color: #25d366;
-            border: 1px solid #25d366;
-        }
-        
-        .secondary-btn:hover {
-            background-color: rgba(37, 211, 102, 0.1);
-        }
-        
         .install-btn {
             background-color: #128c7e;
         }
@@ -137,62 +176,6 @@
             background-color: #b02a25;
         }
         
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            display: none;
-        }
-        
-        .result h3 {
-            color: #128c7e;
-            margin-bottom: 10px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        .link-display {
-            background-color: white;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px dashed #25d366;
-            word-break: break-all;
-            margin-bottom: 10px;
-            font-family: monospace;
-            font-size: 13px;
-        }
-        
-        .copy-btn {
-            background-color: #128c7e;
-            width: auto;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-        
-        .copy-btn:hover {
-            background-color: #0d6b5f;
-        }
-        
-        .success-message {
-            color: #25d366;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-        
-        .error-message {
-            color: #d3332d;
-            margin-top: 8px;
-            font-size: 14px;
-        }
-        
-        .footer {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-        }
-        
         .message-preview {
             background-color: #f0f7ff;
             border: 1px solid #d1e7ff;
@@ -203,6 +186,7 @@
             color: #555;
             text-align: left;
             display: none;
+            line-height: 1.4;
         }
         
         .message-type {
@@ -232,16 +216,52 @@
             background-color: #25d366;
             margin-right: 8px;
         }
+        
+        .footer {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="whatsapp-icon">💬</div>
-            <h1>WhatsApp - Gerador de Links</h1>
+            <h1>WhatsApp - Links Rápidos</h1>
         </div>
         
         <form id="whatsapp-form">
+            <!-- SELEÇÃO DE OPERADORA -->
+            <p class="section-title">Operadora</p>
+            <div class="operator-group">
+                <div class="operator-option">
+                    <input type="radio" name="operator" id="operator-nio" value="NIO" checked>
+                    <label for="operator-nio" class="operator-label">
+                        <span class="operator-icon">📡</span>
+                        NIO
+                    </label>
+                </div>
+                <div class="operator-option">
+                    <input type="radio" name="operator" id="operator-tim" value="TIM">
+                    <label for="operator-tim" class="operator-label">
+                        <span class="operator-icon">📶</span>
+                        TIM
+                    </label>
+                </div>
+            </div>
+            
+            <!-- NÚMERO DE TELEFONE -->
             <div class="input-group">
                 <label for="phone">
                     <span class="status-indicator"></span>
@@ -250,12 +270,14 @@
                 <input type="text" id="phone" placeholder="Ex: 11987654321" required>
             </div>
             
+            <!-- MENSAGEM -->
             <div class="input-group">
                 <label for="message">Mensagem (opcional):</label>
                 <textarea id="message" rows="3" placeholder="Digite a mensagem que será enviada..."></textarea>
                 <div id="message-preview" class="message-preview"></div>
             </div>
             
+            <!-- BOTÕES -->
             <div class="button-group">
                 <button type="button" id="install-btn" class="install-btn">
                     Instalação <span class="message-type type-install">Mensagem Padrão</span>
@@ -267,25 +289,11 @@
                     <span style="margin-right: 8px;">📱</span>
                     Abrir WhatsApp
                 </button>
-                <button type="button" id="generate-link" class="secondary-btn">
-                    <span style="margin-right: 8px;">🔗</span>
-                    Gerar Link
-                </button>
             </div>
         </form>
         
-        <div id="result" class="result">
-            <h3>Link Gerado:</h3>
-            <div id="link-display" class="link-display"></div>
-            <button id="copy-btn" class="copy-btn">
-                <span style="margin-right: 6px;">📋</span>
-                Copiar Link
-            </button>
-            <div id="copy-message" class="success-message"></div>
-        </div>
-        
         <div class="footer">
-            O link gerado abrirá o WhatsApp com a mensagem pré-preenchida
+            O link abrirá o WhatsApp com a mensagem pré-preenchida
         </div>
     </div>
 
@@ -294,29 +302,34 @@
         const phoneInput = document.getElementById('phone');
         const messageInput = document.getElementById('message');
         const messagePreview = document.getElementById('message-preview');
-        const resultDiv = document.getElementById('result');
-        const linkDisplay = document.getElementById('link-display');
-        const copyMessage = document.getElementById('copy-message');
         const openWhatsAppBtn = document.getElementById('open-whatsapp');
-        const generateLinkBtn = document.getElementById('generate-link');
-        const copyBtn = document.getElementById('copy-btn');
         const installBtn = document.getElementById('install-btn');
         const repairBtn = document.getElementById('repair-btn');
+        const radioNIO = document.getElementById('operator-nio');
+        const radioTIM = document.getElementById('operator-tim');
         
-        // Mensagens padrão
-        const installMessage = "Olá, sou técnico da NIO contato referente à instalação. Tem alguém no local para me receber agora? Estou aqui na frente da sua residência.";
-        const repairMessage = "Olá, sou técnico da NIO contato referente ao reparo. Tem alguém no local para me receber agora? Estou aqui na frente da sua residência.";
+        // Função para obter a operadora selecionada
+        function getOperator() {
+            return radioNIO.checked ? 'NIO' : 'TIM';
+        }
+        
+        // Função para gerar mensagem padrão com a operadora
+        function getStandardMessage(type) {
+            const operator = getOperator();
+            
+            if (type === 'install') {
+                return `Olá, sou técnico da ${operator} contato referente à instalação. Tem alguém no local para me receber agora? Estou aqui na frente da sua residência.`;
+            } else {
+                return `Olá, sou técnico da ${operator} contato referente ao reparo. Tem alguém no local para me receber agora? Estou aqui na frente da sua residência.`;
+            }
+        }
         
         // Função para formatar o número de telefone
         function formatPhone(phone) {
-            // Remove tudo que não é dígito
             let cleanPhone = phone.replace(/\D/g, '');
-            
-            // Adiciona o código do país (Brasil = 55) se não estiver presente
             if (!cleanPhone.startsWith('55')) {
                 cleanPhone = '55' + cleanPhone;
             }
-            
             return cleanPhone;
         }
         
@@ -324,11 +337,9 @@
         function generateWhatsAppLink(phone, message) {
             const formattedPhone = formatPhone(phone);
             let encodedMessage = '';
-            
             if (message) {
                 encodedMessage = '?text=' + encodeURIComponent(message);
             }
-            
             return `https://wa.me/${formattedPhone}${encodedMessage}`;
         }
         
@@ -352,137 +363,49 @@
             return cleanPhone.length >= 10;
         }
         
+        // Função genérica para abrir WhatsApp
+        function openWhatsApp(message) {
+            const phone = phoneInput.value;
+            
+            if (!isValidPhone(phone)) {
+                alert('Por favor, insira um número válido (com DDD).');
+                return false;
+            }
+            
+            messageInput.value = message;
+            updateMessagePreview();
+            
+            const whatsappLink = generateWhatsAppLink(phone, message);
+            window.open(whatsappLink, '_blank');
+            return true;
+        }
+        
         // Event listener para o botão "Instalação"
         installBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Limpa mensagens anteriores
-            copyMessage.textContent = '';
-            copyMessage.className = '';
-            
-            // Validação do número de telefone
-            let phone = phoneInput.value;
-            
-            if (!isValidPhone(phone)) {
-                alert('Por favor, insira um número de válido (com DDD).');
-                return;
-            }
-            
-            // Define a mensagem padrão de instalação
-            messageInput.value = installMessage;
-            updateMessagePreview();
-            
-            // Gera o link com a mensagem padrão
-            const whatsappLink = generateWhatsAppLink(phone, installMessage);
-            
-            // Abre o WhatsApp em uma nova aba
-            window.open(whatsappLink, '_blank');
+            openWhatsApp(getStandardMessage('install'));
         });
         
         // Event listener para o botão "Reparo"
         repairBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Limpa mensagens anteriores
-            copyMessage.textContent = '';
-            copyMessage.className = '';
-            
-            // Validação do número de telefone
-            let phone = phoneInput.value;
-            
-            if (!isValidPhone(phone)) {
-                alert('Por favor, insira um número de válido (com DDD).');
-                return;
-            }
-            
-            // Define a mensagem padrão de reparo
-            messageInput.value = repairMessage;
-            updateMessagePreview();
-            
-            // Gera o link com a mensagem padrão
-            const whatsappLink = generateWhatsAppLink(phone, repairMessage);
-            
-            // Abre o WhatsApp em uma nova aba
-            window.open(whatsappLink, '_blank');
+            openWhatsApp(getStandardMessage('repair'));
         });
         
-        // Event listener para o botão "Abrir WhatsApp"
+        // Event listener para o botão "Abrir WhatsApp" (mensagem personalizada)
         openWhatsAppBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Limpa mensagens anteriores
-            copyMessage.textContent = '';
-            copyMessage.className = '';
-            
-            // Validação do número de telefone
-            let phone = phoneInput.value;
+            const phone = phoneInput.value;
             
             if (!isValidPhone(phone)) {
-                alert('Por favor, insira um número de válido (com DDD).');
+                alert('Por favor, insira um número válido (com DDD).');
                 return;
             }
             
-            // Gera o link
             const message = messageInput.value;
             const whatsappLink = generateWhatsAppLink(phone, message);
-            
-            // Abre o WhatsApp em uma nova aba
             window.open(whatsappLink, '_blank');
-        });
-        
-        // Event listener para o botão "Gerar Link"
-        generateLinkBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Limpa mensagens anteriores
-            copyMessage.textContent = '';
-            copyMessage.className = '';
-            
-            // Validação do número de telefone
-            let phone = phoneInput.value;
-            
-            if (!isValidPhone(phone)) {
-                alert('Por favor, insira um número de válido (com DDD).');
-                return;
-            }
-            
-            // Gera o link
-            const message = messageInput.value;
-            const whatsappLink = generateWhatsAppLink(phone, message);
-            
-            // Exibe o link
-            linkDisplay.textContent = whatsappLink;
-            resultDiv.style.display = 'block';
-            
-            // Rola até o resultado
-            resultDiv.scrollIntoView({ behavior: 'smooth' });
-        });
-        
-        // Event listener para o botão de copiar
-        copyBtn.addEventListener('click', function() {
-            const linkText = document.getElementById('link-display').textContent;
-            
-            navigator.clipboard.writeText(linkText).then(function() {
-                copyMessage.textContent = 'Link copiado com sucesso!';
-                copyMessage.className = 'success-message';
-            }, function() {
-                // Fallback para navegadores que não suportam Clipboard API
-                const textArea = document.createElement('textarea');
-                textArea.value = linkText;
-                document.body.appendChild(textArea);
-                textArea.select();
-                
-                try {
-                    document.execCommand('copy');
-                    copyMessage.textContent = 'Link copiado com sucesso!';
-                    copyMessage.className = 'success-message';
-                } catch (err) {
-                    copyMessage.textContent = 'Falha ao copiar. Por favor, copie manualmente.';
-                    copyMessage.className = 'error-message';
-                }
-                
-                document.body.removeChild(textArea);
-            });
         });
     </script>
 </body>
