@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp - Gerador de Links</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .whatsapp-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 20px;
+        }
+        
+        h1 {
+            color: #128c7e;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border 0.2s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #25d366;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button:hover {
+            background-color: #128c7e;
+        }
+        
+        .secondary-btn {
+            background-color: transparent;
+            color: #25d366;
+            border: 1px solid #25d366;
+        }
+        
+        .secondary-btn:hover {
+            background-color: rgba(37, 211, 102, 0.1);
+        }
+        
+        .install-btn {
+            background-color: #128c7e;
+        }
+        
+        .install-btn:hover {
+            background-color: #0d6b5f;
+        }
+        
+        .repair-btn {
+            background-color: #d3332d;
+        }
+        
+        .repair-btn:hover {
+            background-color: #b02a25;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .result h3 {
+            color: #128c7e;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .link-display {
+            background-color: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px dashed #25d366;
+            word-break: break-all;
+            margin-bottom: 10px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        
+        .copy-btn {
+            background-color: #128c7e;
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .copy-btn:hover {
+            background-color: #0d6b5f;
+        }
+        
+        .success-message {
+            color: #25d366;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            color: #d3332d;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .footer {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+        
+        .message-preview {
+            background-color: #f0f7ff;
+            border: 1px solid #d1e7ff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #555;
+            text-align: left;
+            display: none;
+        }
+        
+        .message-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+        
+        .type-install {
+            background-color: #128c7e;
+            color: white;
+        }
+        
+        .type-repair {
+            background-color: #d3332d;
+            color: white;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #25d366;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="whatsapp-icon">💬</div>
+            <h1>WhatsApp - Gerador de Links</h1>
+        </div>
+        
+        <form id="whatsapp-form">
+            <div class="input-group">
+                <label for="phone">
+                    <span class="status-indicator"></span>
+                    Número de Telefone (com DDD):
+                </label>
+                <input type="text" id="phone" placeholder="Ex: 11987654321" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="message">Mensagem (opcional):</label>
+                <textarea id="message" rows="3" placeholder="Digite a mensagem que será enviada..."></textarea>
+                <div id="message-preview" class="message-preview"></div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" id="install-btn" class="install-btn">
+                    Instalação <span class="message-type type-install">Mensagem Padrão</span>
+                </button>
+                <button type="button" id="repair-btn" class="repair-btn">
+                    Reparo <span class="message-type type-repair">Mensagem Padrão</span>
+                </button>
+                <button type="submit" id="open-whatsapp">
+                    <span style="margin-right: 8px;">📱</span>
+                    Abrir WhatsApp
+                </button>
+                <button type="button" id="generate-link" class="secondary-btn">
+                    <span style="margin-right: 8px;">🔗</span>
+                    Gerar Link
+                </button>
+            </div>
+        </form>
+        
+        <div id="result" class="result">
+            <h3>Link Gerado:</h3>
+            <div id="link-display" class="link-display"></div>
+            <button id="copy-btn" class="copy-btn">
+                <span style="margin-right: 6px;">📋</span>
+                Copiar Link
+            </button>
+            <div id="copy-message" class="success-message"></div>
+        </div>
+        
+        <div class="footer">
+            O link gerado abrirá o WhatsApp com a mensagem pré-preenchida
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const phoneInput = document.getElementById('phone');
+        const messageInput = document.getElementById('message');
+        const messagePreview = document.getElementById('message-preview');
+        const resultDiv = document.getElementById('result');
+        const linkDisplay = document.getElementById('link-display');
+        const copyMessage = document.getElementById('copy-message');
+        const openWhatsAppBtn = document.getElementById('open-whatsapp');
+        const generateLinkBtn = document.getElementById('generate-link');
+        const copyBtn = document.getElementById('copy-btn');
+        const installBtn = document.getElementById('install-btn');
+        const repairBtn = document.getElementById('repair-btn');
+        
+        // Mensagens padrão
+        const installMessage = "Olá, sou técnico da NIO contato referente à instalação. Tem alguém no local para me receber agora? Estou aqui na frente da sua residência.";
+        const repairMessage = "Olá, sou técnico da NIO contato referente ao reparo. Tem alguém no local para me receber agora? Estou aqui na frente da sua residência.";
+        
+        // Função para formatar o número de telefone
+        function formatPhone(phone) {
+            // Remove tudo que não é dígito
+            let cleanPhone = phone.replace(/\D/g, '');
+            
+            // Adiciona o código do país (Brasil = 55) se não estiver presente
+            if (!cleanPhone.startsWith('55')) {
+                cleanPhone = '55' + cleanPhone;
+            }
+            
+            return cleanPhone;
+        }
+        
+        // Função para gerar o link do WhatsApp
+        function generateWhatsAppLink(phone, message) {
+            const formattedPhone = formatPhone(phone);
+            let encodedMessage = '';
+            
+            if (message) {
+                encodedMessage = '?text=' + encodeURIComponent(message);
+            }
+            
+            return `https://wa.me/${formattedPhone}${encodedMessage}`;
+        }
+        
+        // Função para exibir a pré-visualização da mensagem
+        function updateMessagePreview() {
+            const message = messageInput.value;
+            if (message) {
+                messagePreview.textContent = message;
+                messagePreview.style.display = 'block';
+            } else {
+                messagePreview.style.display = 'none';
+            }
+        }
+        
+        // Atualizar pré-visualização quando o usuário digita
+        messageInput.addEventListener('input', updateMessagePreview);
+        
+        // Função para verificar se o número é válido
+        function isValidPhone(phone) {
+            const cleanPhone = phone.replace(/\D/g, '');
+            return cleanPhone.length >= 10;
+        }
+        
+        // Event listener para o botão "Instalação"
+        installBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Limpa mensagens anteriores
+            copyMessage.textContent = '';
+            copyMessage.className = '';
+            
+            // Validação do número de telefone
+            let phone = phoneInput.value;
+            
+            if (!isValidPhone(phone)) {
+                alert('Por favor, insira um número de válido (com DDD).');
+                return;
+            }
+            
+            // Define a mensagem padrão de instalação
+            messageInput.value = installMessage;
+            updateMessagePreview();
+            
+            // Gera o link com a mensagem padrão
+            const whatsappLink = generateWhatsAppLink(phone, installMessage);
+            
+            // Abre o WhatsApp em uma nova aba
+            window.open(whatsappLink, '_blank');
+        });
+        
+        // Event listener para o botão "Reparo"
+        repairBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Limpa mensagens anteriores
+            copyMessage.textContent = '';
+            copyMessage.className = '';
+            
+            // Validação do número de telefone
+            let phone = phoneInput.value;
+            
+            if (!isValidPhone(phone)) {
+                alert('Por favor, insira um número de válido (com DDD).');
+                return;
+            }
+            
+            // Define a mensagem padrão de reparo
+            messageInput.value = repairMessage;
+            updateMessagePreview();
+            
+            // Gera o link com a mensagem padrão
+            const whatsappLink = generateWhatsAppLink(phone, repairMessage);
+            
+            // Abre o WhatsApp em uma nova aba
+            window.open(whatsappLink, '_blank');
+        });
+        
+        // Event listener para o botão "Abrir WhatsApp"
+        openWhatsAppBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Limpa mensagens anteriores
+            copyMessage.textContent = '';
+            copyMessage.className = '';
+            
+            // Validação do número de telefone
+            let phone = phoneInput.value;
+            
+            if (!isValidPhone(phone)) {
+                alert('Por favor, insira um número de válido (com DDD).');
+                return;
+            }
+            
+            // Gera o link
+            const message = messageInput.value;
+            const whatsappLink = generateWhatsAppLink(phone, message);
+            
+            // Abre o WhatsApp em uma nova aba
+            window.open(whatsappLink, '_blank');
+        });
+        
+        // Event listener para o botão "Gerar Link"
+        generateLinkBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Limpa mensagens anteriores
+            copyMessage.textContent = '';
+            copyMessage.className = '';
+            
+            // Validação do número de telefone
+            let phone = phoneInput.value;
+            
+            if (!isValidPhone(phone)) {
+                alert('Por favor, insira um número de válido (com DDD).');
+                return;
+            }
+            
+            // Gera o link
+            const message = messageInput.value;
+            const whatsappLink = generateWhatsAppLink(phone, message);
+            
+            // Exibe o link
+            linkDisplay.textContent = whatsappLink;
+            resultDiv.style.display = 'block';
+            
+            // Rola até o resultado
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Event listener para o botão de copiar
+        copyBtn.addEventListener('click', function() {
+            const linkText = document.getElementById('link-display').textContent;
+            
+            navigator.clipboard.writeText(linkText).then(function() {
+                copyMessage.textContent = 'Link copiado com sucesso!';
+                copyMessage.className = 'success-message';
+            }, function() {
+                // Fallback para navegadores que não suportam Clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = linkText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    copyMessage.textContent = 'Link copiado com sucesso!';
+                    copyMessage.className = 'success-message';
+                } catch (err) {
+                    copyMessage.textContent = 'Falha ao copiar. Por favor, copie manualmente.';
+                    copyMessage.className = 'error-message';
+                }
+                
+                document.body.removeChild(textArea);
+            });
+        });
+    </script>
+</body>
+</html>
